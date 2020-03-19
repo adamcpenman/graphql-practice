@@ -1,8 +1,18 @@
-const server = require('express')();
-const apolloServer = require('apollo-server-express');
+const express = require('express');
+const { ApolloServer } = require('apollo-server-express');
+const typeDefs = require('./schema');
+const resolvers = require('./resolver');
 
 const port = process.env.PORT || 5000;
 
-server.listen(port, () => {
-  console.log(`We are live at ${port}`);
+const app = express();
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers
+});
+server.applyMiddleware({ app });
+
+app.listen({ port }, () => {
+  console.log(`We are live at ${server.graphqlPath}`);
 });
